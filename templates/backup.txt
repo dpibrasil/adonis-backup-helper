@@ -1,8 +1,7 @@
-import { BackupConfig } from '@ioc:DPI/Backup'
 import Application from '@ioc:Adonis/Core/Application'
 import Env from '@ioc:Adonis/Core/Env'
 
-export const backupConfig: BackupConfig = {
+export default {
 
     // Define the models that must be included in backups
     models: [],
@@ -14,5 +13,9 @@ export const backupConfig: BackupConfig = {
     // IMPORTANT: You can only restore the backup if you have the key
     encrypt: true,
     encryptKey: Env.get('BACKUP_ENCRYPT_KEY')
+
+    // Define the path that the backups must be exported
+    // Set null to App/Backups
+    exportPath: null,
 
 }

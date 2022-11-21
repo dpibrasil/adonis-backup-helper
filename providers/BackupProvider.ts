@@ -6,6 +6,8 @@ export default class BackupProvider {
     constructor(protected app: ApplicationContract) {}
 
     public register() {
-        this.app.container.singleton('DPI/Backup', () => {})
+        this.app.container.singleton('DPI/Backup', (data) => {
+            console.log(data)
+        })
     }
 }

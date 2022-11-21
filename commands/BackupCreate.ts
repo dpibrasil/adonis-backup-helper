@@ -1,8 +1,4 @@
 import { BaseCommand, flags } from '@adonisjs/core/build/standalone'
-import Logger from '@ioc:Adonis/Core/Logger'
-import {v4 as uuid} from 'uuid'
-import AdmZip from 'adm-zip'
-import path from 'path'
 
 export default class BackupCreate extends BaseCommand {
   public static commandName = 'backup:create'
@@ -21,37 +17,21 @@ export default class BackupCreate extends BaseCommand {
    * Execute command
    */
   public async run(): Promise<void> {
-    const backupConfig = this.application.container.resolveBinding('Adonis/Core/Config').get('backup.backupConfig')
-    const zip = new AdmZip()
-
-    // make backup from models
-    const backupModels: any = []
-    for (const modelName of backupConfig.models) {
-      Logger.debug('[BACKUP] Gerando backup do modelo: ' + modelName)
-      const { default: Model } = await import('App/Models/' + modelName)
-      const items = (await Model.all()).map(m => m.toJSON())
-      backupModels.push({modelName, items})
-    }
-    zip.addFile('models.json', Buffer.from(JSON.stringify(backupModels), 'utf-8'))
-
-    // make backup from paths
-    for (const pathIndex in backupConfig.paths) {
-      const config = {originalPath: backupConfig.paths[pathIndex]}
-      Logger.debug('[BACKUP] Gerando backup do caminho: ' + config.originalPath)
-      const folderPathInBkp = 'paths/' + pathIndex
-      zip.addLocalFolder(backupConfig.paths[pathIndex], folderPathInBkp)
-      zip.addFile(folderPathInBkp + path.sep + 'config.json', Buffer.from(JSON.stringify(config), 'utf-8'))
-    }
+    const appRoot = this.application.cliCwd || this.application.appRoot
+    const {default: path} = await import('path')
+    const {default: Backup} = await import('../src/Backup')
+    const backupConfig = this.application.container.resolveBinding('Adonis/Core/Config').get('backup')
+    
+    // generate
+    const backupGen = new Backup(this.application, backupConfig.paths, backupConfig.models)
+    const backup = await backupGen.create()
 
     // save
-    const p = this.application.resolveNamespaceDirectory('backups')
-    const name = (this.name ?? uuid()) + '.adonisbkp'
+    const p = backup.exportPath || backupGen.getBackupsPath()
+    const name = (this.name ?? new Date().toISOString()) + '.' + (backupConfig.extName || 'adonisbkp')
 
-    this.generator
-      .addFile(name, { pattern: 'pascalcase', form: 'singular' })
-      .stub(zip.toBuffer().toString())
-      .destinationDir(p || 'app/Backups')
-      .useMustache()
-      .appRoot(this.application.cliCwd || this.application.appRoot)
+    await backup.writeZipPromise(path.join(appRoot, p, name))
+    
+    this.logger.success(`Backup completed: ${p}/${name}.`, 'BACKUP')
   }
 }

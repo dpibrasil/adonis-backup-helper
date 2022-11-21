@@ -1,6 +1,6 @@
 {
-  "name": "adonis-backup-helper",
-  "version": "1.0.0",
+  "name": "@dpi/adonis-backup-helper",
+  "version": "1.0.3",
   "description": "AdonisJS Backup Helper",
   "main": "build/providers/BackupProvider.js",
   "scripts": {
@@ -8,26 +8,32 @@
     "pretest": "npm run lint",
     "test": "node -r @adonisjs/require-ts/build/register bin/test.ts",
     "clean": "del-cli build",
-    "compile": "npm run lint && npm run clean && tsc",
+    "copyfiles": "copyfiles \"templates**/*.txt\" build",
+    "compile": "npm run lint && npm run clean && tsc && npm run copyfiles",
     "build": "npm run compile",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "lint": "eslint . --ext js,jsx,ts,tsx --fix"
   },
   "repository": "https://github.com/dpibrasil/adonis-backup-helper.git",
   "author": "Toni Moreira <moreiraatoni@gmail.com>",
   "license": "MIT",
   "private": false,
   "devDependencies": {
+    "@adonisjs/core": "^5.1.0",
+    "@adonisjs/lucid": "^18.2.0",
     "@adonisjs/mrm-preset": "^5.0.3",
     "@adonisjs/require-ts": "^2.0.13",
     "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
     "del-cli": "^5.0.0",
+    "eslint": "^8.28.0",
     "mrm": "^4.1.13",
     "typescript": "^4.9.3"
   },
   "peerDependencies": {
     "@adonisjs/core": "^5.1.0",
-    "@adonisjs/lucid": "^18.0.1",
-    "uuid": "^9.0.0"
+    "@adonisjs/lucid": "^18.0.1"
   },
   "mrmConfig": {
     "core": false,
@@ -39,9 +45,34 @@
   "files": [
     "build/src",
     "build/index.d.ts",
-    "build/index.js"
+    "build/instructions.js",
+    "build/index.js",
+    "build/adonis-typings",
+    "build/commands",
+    "build/providers",
+    "build/src",
+    "build/templates"
   ],
   "dependencies": {
-    "adm-zip": "^0.5.9"
+    "@adonisjs/lucid": "^18.0.1",
+    "@adonisjs/sink": "^5.4.2",
+    "adm-zip": "^0.5.9",
+    "copyfiles": "^2.4.1"
+  },
+  "commands": [
+    "@dpi/adonis-backup-helper/commands"
+  ],
+  "adonisjs": {
+    "providers": [
+      "@dpi/adonis-backup-helper"
+    ],
+    "types": "@dpi/adonis-backup-helper",
+    "instructions": "./build/instructions.js",
+    "templates": {
+      "basePath": "./build/templates",
+      "config": [
+        "backup.txt"
+      ]
+    }
   }
 }

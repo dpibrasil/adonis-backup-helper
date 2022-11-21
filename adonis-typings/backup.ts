@@ -4,5 +4,7 @@ export type BackupConfig = {
     models: ModelObject[],
     paths: string[],
     encrypt: boolean,
-    encryptKey: string
+    encryptKey: string,
+    exportPath: string,
+    extName: string
 }
