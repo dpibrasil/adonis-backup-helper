@@ -27,7 +27,7 @@ class Backup {
         const appRoot = this.getAppRoot()
 
         // make backup from models
-        const backupModels: any = []
+        const backupModels: {modelName: string, items: object[]}[] = []
         for (const modelName of this.models) {
           const { default: Model } = await import(path.join(appRoot,'App', 'Models', modelName))
           const items = (await Model.all()).map(m => m.$original)
