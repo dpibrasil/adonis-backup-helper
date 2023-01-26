@@ -1,4 +1,4 @@
 export default [
-    "@dpi/adonis-backup-helper/build/commands/BackupCreate",
-    "@dpi/adonis-backup-helper/build/commands/BackupRestore"
+    "@tonimoreiraa/adonis-backup-helper/build/commands/BackupCreate",
+    "@tonimoreiraa/adonis-backup-helper/build/commands/BackupRestore"
 ]

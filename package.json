@@ -1,5 +1,5 @@
 {
-  "name": "@dpi/adonis-backup-helper",
+  "name": "@tonimoreiraa/adonis-backup-helper",
   "version": "1.0.3",
   "description": "AdonisJS Backup Helper",
   "main": "build/providers/BackupProvider.js",
@@ -29,7 +29,7 @@
     "del-cli": "^5.0.0",
     "eslint": "^8.28.0",
     "mrm": "^4.1.13",
-    "typescript": "^4.9.3"
+    "typescript": "^4.8.9"
   },
   "peerDependencies": {
     "@adonisjs/core": "^5.1.0",
@@ -60,13 +60,13 @@
     "copyfiles": "^2.4.1"
   },
   "commands": [
-    "@dpi/adonis-backup-helper/commands"
+    "@tonimoreiraa/adonis-backup-helper/commands"
   ],
   "adonisjs": {
     "providers": [
-      "@dpi/adonis-backup-helper"
+      "@tonimoreiraa/adonis-backup-helper"
     ],
-    "types": "@dpi/adonis-backup-helper",
+    "types": "@tonimoreiraa/adonis-backup-helper",
     "instructions": "./build/instructions.js",
     "templates": {
       "basePath": "./build/templates",
